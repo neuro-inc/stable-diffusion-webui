@@ -1,0 +1,47 @@
+kind: live
+title: stable-diffusion-webui
+
+defaults:
+  life_span: 5d
+
+images:
+  stablediffusion:
+    ref: image:$[[ project.id ]]:v1
+    dockerfile: $[[ flow.workspace ]]/Dockerfile
+    context: $[[ flow.workspace ]]/
+    build_preset: cpu-large
+
+volumes:
+  models:
+    remote: storage:$[[ flow.project_id ]]/models
+    mount: /home/worker/app/models
+    local: models
+  embeddings:
+    remote: storage:$[[ flow.project_id ]]/embeddings
+    mount: /home/worker/app/embeddings
+    local: embeddings
+
+jobs:
+  stablediffusioncpu:
+    image: ${{ images.stablediffusion.ref }}
+    name: stablediffusion
+    preset: cpu-large
+    http_port: "7860"
+    browse: true
+    env:
+      COMMANDLINE_ARGS: --skip-version-check --skip-torch-cuda-test --allow-code --enable-insecure-extension-access --api --opt-channelslast --no-half --lowvram
+    volumes:
+      - ${{ volumes.models.ref_rw }}
+      - ${{ volumes.embeddings.ref_rw }}
+
+  stablediffusion:
+    image: ${{ images.stablediffusion.ref }}
+    name: stablediffusion
+    preset: a100x1
+    http_port: "7860"
+    browse: true
+    env:
+      COMMANDLINE_ARGS: --api
+    volumes:
+      - ${{ volumes.models.ref_rw }}
+      - ${{ volumes.embeddings.ref_rw }}
