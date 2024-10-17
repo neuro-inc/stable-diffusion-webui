@@ -12,6 +12,10 @@ images:
     build_preset: cpu-large
 
 volumes:
+  images:
+    remote: storage:$[[ flow.project_id ]]/images
+    mount: /home/worker/app/log/images
+    local: images
   models:
     remote: storage:$[[ flow.project_id ]]/models
     mount: /home/worker/app/models
@@ -20,6 +24,10 @@ volumes:
     remote: storage:$[[ flow.project_id ]]/embeddings
     mount: /home/worker/app/embeddings
     local: embeddings
+  outputs:
+    remote: storage:$[[ flow.project_id ]]/outputs
+    mount: /home/worker/app/outputs
+    local: outputs
 
 jobs:
   stablediffusioncpu:
@@ -41,7 +49,9 @@ jobs:
     http_port: "7860"
     browse: true
     env:
-      COMMANDLINE_ARGS: --api
+      COMMANDLINE_ARGS: --api --disable-safe-unpickle
     volumes:
       - ${{ volumes.models.ref_rw }}
       - ${{ volumes.embeddings.ref_rw }}
+      - ${{ volumes.images.ref_rw }}
+      - ${{ volumes.outputs.ref_rw }}
