@@ -25,8 +25,5 @@ jobs:
         run: make build-image
       - name: Push image
         run: |
-          export IMAGE_TAG=${GITHUB_REF#refs/tags/v}
-          make push-image
-
-          export IMAGE_TAG=latest
+          export IMAGE_TAG=development
           make push-image

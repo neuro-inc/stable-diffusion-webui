@@ -6,7 +6,7 @@ defaults:
 
 images:
   stablediffusion:
-    ref: image:$[[ project.id ]]:v1
+    ref: image:$[[ project.id ]]:development
     dockerfile: $[[ flow.workspace ]]/Dockerfile
     context: $[[ flow.workspace ]]/
     build_preset: cpu-large
