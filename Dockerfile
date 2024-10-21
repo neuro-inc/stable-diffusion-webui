@@ -29,7 +29,6 @@ RUN echo 'venv_dir=/home/worker/app/venv' > webui-user.sh
 
 ENV install_dir=/
 USER worker
-RUN ./webui.sh --exit --skip-torch-cuda-test --skip-load-model-at-start
 
 ENV VIRTUAL_ENV=/home/worker/app/venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"

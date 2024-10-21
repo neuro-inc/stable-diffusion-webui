@@ -6,9 +6,15 @@ defaults:
 
 images:
   stablediffusion:
-    ref: image:$[[ project.id ]]:development
+    ref: image:$[[ project.id ]]:v1
     dockerfile: $[[ flow.workspace ]]/Dockerfile
     context: $[[ flow.workspace ]]/
+    build_preset: cpu-large
+
+  stablestudio:
+    ref: image:$[[ project.id ]]-stablestudio:development
+    dockerfile: $[[ flow.workspace ]]/stablestudio/Dockerfile
+    context: $[[ flow.workspace ]]/stablestudio
     build_preset: cpu-large
 
 volumes:
@@ -31,7 +37,7 @@ volumes:
 
 jobs:
   stablediffusioncpu:
-    image: ${{ images.stablediffusion.ref }}
+    image: ghcr.io/neuro-inc/stable-diffusion-webui:development
     name: stablediffusion
     preset: cpu-large
     http_port: "7860"
@@ -43,13 +49,35 @@ jobs:
       - ${{ volumes.embeddings.ref_rw }}
 
   stablediffusion:
-    image: ${{ images.stablediffusion.ref }}
+    image: ghcr.io/neuro-inc/stable-diffusion-webui:development
     name: stablediffusion
     preset: a100x1
     http_port: "7860"
     browse: true
     env:
       COMMANDLINE_ARGS: --api --disable-safe-unpickle
+    volumes:
+      - ${{ volumes.models.ref_rw }}
+      - ${{ volumes.embeddings.ref_rw }}
+      - ${{ volumes.images.ref_rw }}
+      - ${{ volumes.outputs.ref_rw }}
+
+  stablestudio:
+    image: ghcr.io/neuro-inc/stable-diffusion-webui:development
+    name: stablestudio
+    preset: cpu-large
+    http_port: "3000"
+    browse: true
+
+  stablediffusionapi:
+    image: ghcr.io/neuro-inc/stable-diffusion-webui:development
+    name: stablediffusionapi
+    preset: a100x1
+    http_port: "7861"
+    browse: true
+    http_auth: false
+    env:
+      COMMANDLINE_ARGS: --api --disable-safe-unpickle --nowebui --api-log --loglevel debug --log-startup --cors-allow-origins=*
     volumes:
       - ${{ volumes.models.ref_rw }}
       - ${{ volumes.embeddings.ref_rw }}

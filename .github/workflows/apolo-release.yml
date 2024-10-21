@@ -11,7 +11,7 @@ jobs:
   release:
     name: Release image
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    if: github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/apolo')
     steps:
       - name: Checkout commit
         uses: actions/checkout@v4
@@ -27,3 +27,9 @@ jobs:
         run: |
           export IMAGE_TAG=development
           make push-image
+      - name: Build StableStudio
+        run: make build-stablestudio-image
+      - name: Push image
+        run: |
+          export IMAGE_TAG=development
+          make push-stablestudio-image
