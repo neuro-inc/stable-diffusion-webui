@@ -1,6 +1,7 @@
 ARG GIT_TAG=${GIT_TAG:-main}
 
 FROM node:18-alpine AS app
+LABEL org.opencontainers.image.source = "https://github.com/neuro-inc/stablestudio"
 
 ARG GIT_TAG
 RUN apk add --no-cache bash coreutils git

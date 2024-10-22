@@ -1,4 +1,5 @@
 FROM pytorch/pytorch:2.3.0-cuda12.1-cudnn8-runtime
+LABEL org.opencontainers.image.source = "https://github.com/neuro-inc/stable-diffusion-webui"
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV PYTHONUNBUFFERED 1
