@@ -21,9 +21,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN adduser --system worker
 WORKDIR /home/worker/app
 
+RUN usermod -aG root worker
+RUN chown -R worker:root /home/worker && \
+    chmod -R g+rwx /home/worker
 COPY --chown=worker . .
-
-RUN chown -R worker /home/worker
 
 # setup venv in /venv to avoid conflict
 RUN echo 'venv_dir=/home/worker/app/venv' > webui-user.sh
