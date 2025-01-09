@@ -13,4 +13,4 @@ jobs:
       upstream_repository: https://github.com/AUTOMATIC1111/stable-diffusion-webui
       upstream_tag_regex: 'v\d+\..*'
     secrets:
-      personal_access_token: ${{ secrets.AUTO_PR_PAT }}
+      personal_access_token: ${{ secrets.GH_AUTO_PR }}
